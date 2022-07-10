@@ -112,12 +112,17 @@ python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py \
 #### Transferring Experiments
 [To be updated]
 
+
+## Join Us
+Welcome to be a member (or an intern) of our team if you are interested in Quantization, Pruning, Distillation, Self-Supervised Learning and Model Deployment.
+Please send your resume to sunpeiqin@megvii.com.
+
 ## Citation
 Please consider citing our work in your publications if it helps your research.
 ```
 @article{SSQL,
    title         = {Synergistic Self-supervised and Quantization Learning},
-   author        = {Yun-Hao Cao, Yechang Huang, Peiqin Sun, Jianxin Wu and Shuchang Zhou},
+   author        = {Yun-Hao Cao, Peiqin Sun, Yechang Huang, Jianxin Wu and Shuchang Zhou},
    year          = {2022},
    booktitle = {The European Conference on Computer Vision}}
 ```
