@@ -28,6 +28,8 @@ further demonstrate the effectiveness of our method.
 * Numpy
 * CUDA 10.1
 
+All dataset definitions are in the [datasets](datasets/) folder. By default, the form of PyTorch's train/val folder is used. You can specify the path of the dataset yourself in the corresponding dataset file.
+
 ### CIFAR Experiments
 - Pre-training stage using SSQL (c.f. [scripts/cifar/run_Qsimsiam.sh](scripts/cifar/run_Qsimsiam.sh)), run:
 ```
