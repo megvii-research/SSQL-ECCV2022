@@ -112,6 +112,11 @@ python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py \
 #### Transferring Experiments
 [To be updated]
 
+
+## Join Us
+Welcome to be a member (or an intern) of our team if you are interested in Quantization, Pruning, Distillation, Self-Supervised Learning and Model Deployment.
+Please send your resume to sunpeiqin@megvii.com.
+
 ## Citation
 Please consider citing our work in your publications if it helps your research.
 ```
