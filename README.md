@@ -22,9 +22,9 @@ further demonstrate the effectiveness of our method.
 ## Getting Started
 
 ### Prerequisites
-* python 3
+* Python 3
 * PyTorch (= 1.10.0)
-* torchvision (= 0.11.1)
+* Torchvision (= 0.11.1)
 * Numpy
 * CUDA 10.1
 
