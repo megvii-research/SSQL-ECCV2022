@@ -1,5 +1,5 @@
 # SSQL-ECCV2022
-Official code for **S**ynergistic **S**elf-supervised and **Q**uantization **L**earning (Accepted to ECCV 2022 **oral presentation**)
+Official code for **S**ynergistic **S**elf-supervised and **Q**uantization **L**earning (Accepted to **ECCV 2022 oral presentation**)
 
 <div align=center><img src="https://github.com/CupidJay/SSQL-ECCV2022/blob/main/method.png" width="75%"></div>
 
