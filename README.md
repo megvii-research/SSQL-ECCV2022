@@ -117,7 +117,7 @@ Please consider citing our work in your publications if it helps your research.
 ```
 @article{SSQL,
    title         = {Synergistic Self-supervised and Quantization Learning},
-   author        = {Yun-Hao Cao, Yechang Huang, Peiqin Sun, Jianxin Wu and Shuchang Zhou},
+   author        = {Yun-Hao Cao, Peiqin Sun, Yechang Huang, Jianxin Wu and Shuchang Zhou},
    year          = {2022},
    booktitle = {The European Conference on Computer Vision}}
 ```
