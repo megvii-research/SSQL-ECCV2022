@@ -1,0 +1,96 @@
+SEED: 100
+MODEL:
+    ARCH: cifar_resnet18
+    #ARCH: resnet18
+    INPUTSHAPE: [32, 32]
+    #PRETRAINED: train_log/RQbyol_MomentumMinMax_4w4f_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyol_MomentumMinMax_20ep_0_0.9_randombit_2_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar   
+    #PRETRAINED: train_log/RQbyol_MomentumMinMax_20ep_0_0.8_randombit_2_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyol_MomentumMinMax_linear_1.0_randombit_2_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar  
+    #PRETRAINED: train_log/RQbyol_MomentumMinMax_cosine_1.0_randombit_4_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar      
+    #PRETRAINED: train_log/RQbyol_4w4f_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyol_8w8f_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: /data/train_log/cifar10/r18/simsiam_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    PRETRAINED: /data/train_log/cifar10/r18/simclr_cifar_r18_cifar10_baseline_v2/checkpoint.pth.tar
+    #PRETRAINED: /data/train_log/cifar10/r18/RQbyol_randombit_w_2_8_f_4_8+floatloss_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar           
+    #PRETRAINED: train_log/RQbyol_randombit_4_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyol_randombit_2_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar   
+    #PRETRAINED: train_log/RQbyolv2_randombit_4_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyolv2_randombit_2_16_add_float_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/RQbyolv2_randombit_4_16_add_float_2000ep_cifar_r18_cifar10_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/cifar100/simsiam_cifar_r18_cifar100_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/cifar100/RQbyol_randombit_4_16_add_float_cifar_r18_cifar100_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/cifar100/RQbyolv2_randombit_4_16_auxiliary_add_float_cifar_r18_cifar100_baseline/checkpoint.pth.tar
+    #PRETRAINED: train_log/cifar100/RQbyolv2_randombit_4_16_add_float_cifar_r18_cifar100_baseline/checkpoint.pth.tar
+TRAIN:
+    EPOCHS: 100
+    USE_DDP: True
+    LINEAR_EVAL: True
+    DATASET: cifar10
+    BATCH_SIZE: 128 # per-gpu
+    OPTIMIZER: 
+        NAME: sgd
+        MOMENTUM: 0.9
+        WEIGHT_DECAY: 0.000 # 1e-5
+    LR_SCHEDULER:
+        WARMUP_EPOCHS: 0
+        WARMUP_LR: 0.0002 # 1e-4
+        BASE_LR: 30.0 # 1e-2
+        #BASE_LR: 0.1 
+        MIN_LR: 0.
+        #TYPE: cosine
+        TYPE: multiStep
+        DECAY_RATE: 0.1
+        DECAY_MILESTONES : [60, 80]
+    LOSS: 
+        CRITERION:
+            NAME: CrossEntropy
+        #REGULARIZER:
+        #    NAME: PACT
+        LAMBDA: 0.0001
+    METER:
+        NAME: ACC
+        ACC:
+            TOPK: [1, 5]
+    RUNNER:
+        NAME: default
+AUG:
+    TRAIN:
+        HORIZONTAL_FLIP:
+            PROB: 0.5
+        RANDOMCROP:
+            ENABLE: True
+            PADDING: 4
+        NORMLIZATION:
+            MEAN: [0.4914, 0.4822, 0.4465]
+            STD: [0.2023, 0.1994, 0.2010]
+    EVALUATION:
+        RESIZE: 
+            ENABLE: False
+            SIZE: [32, 32]
+        CENTERCROP: 
+            ENABLE: False
+        NORMLIZATION:
+            MEAN: [0.4914, 0.4822, 0.4465]
+            STD: [0.2023, 0.1994, 0.2010]
+QUANT:
+    TYPE: ptq
+    CALIBRATION:
+        TYPE: tar
+        PATH: calibrations/cifar10_train_1000.tar
+        SIZE: 1000
+        BATCHSIZE: 128
+    W:
+        BIT: 4
+        SYMMETRY: True
+        QUANTIZER: uniform
+        GRANULARITY : channelwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    A:
+        BIT: 4
+        SYMMETRY: False
+        QUANTIZER: uniform
+        GRANULARITY : layerwise
+        OBSERVER_METHOD:
+            NAME: MINMAX

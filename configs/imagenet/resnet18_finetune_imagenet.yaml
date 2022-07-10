@@ -1,0 +1,123 @@
+SEED: 100
+MODEL:
+    ARCH: resnet18
+    INPUTSHAPE: [224, 224]
+    #PRETRAINED: checkpoints/resnet50.pth
+    PRETRAINED: /data/train_log_lars/resnet18_simsiam_rerun_float_imagenet_linear_eval/checkpoint.pth.tar
+    #PRETRAINED: /data/train_log/imagenet/simsiam_rerun_imagenet_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: train_log/imagenet/simsiam_imagenet_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: train_log/imagenet/simsiam_200ep_imagenet_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: train_log/imagenet/RQbyol_randombit_4_16_add_float_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: train_log/imagenet/RQbyol_randombit_w_2_8_f_4_8_add_float_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: /data/train_log/imagenet/RQbyol_randombit_w_2_8_f_4_8+floatloss_add_float_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: /data/train_log/imagenet/RQbyol_200ep_randombit_w_2_8_f_4_8+floatloss_add_float_r18_imagenet_baseline/checkpoint.pth.tar 
+    #PRETRAINED: /home/caoyunhao/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+    #CHECKPOINT: train_log_NEW/resnet18_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_4w4f_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_RQbyol_4_16_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_RQbyol_4_16_8w8f_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_RQbyol_4_16_4w4f_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_RQbyol_randombit_w_2_8_f_4_8_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_NEW/resnet18_RQbyol_randombit_w_2_8_f_4_8_4w4f_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_lars/resnet18_simsiam_200ep_4w4f_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune/checkpoint.pth.tar  
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune/checkpoint.pth.tar  
+    #CHECKPOINT: train_log_lars/resnet18_RQbyol_randombit_w_2_8_f_4_8_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_lars/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_lars/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_4w4f_imagenet_linear_eval/checkpoint.pth.tar
+    #PRETRAINED: /data/train_log_lars/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_linear_eval/checkpoint.pth.tar
+    #PRETRAINED: /data/train_log_lars/resnet18_RQbyol_200ep_randombit_w_2_8_f_4_8+floatloss_float_imagenet_linear_eval/checkpoint.pth.tar
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune/checkpoint.pth.tar  
+    #CHECKPOINT: /data/train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune_lr_0.001/checkpoint.pth.tar
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune_lr_0.1_90ep/checkpoint.pth.tar  
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune_normal_lr_0.1_90ep/checkpoint.pth.tar  
+    #CHECKPOINT: train_log_finetune/resnet18_RQbyol_randombit_w_2_8_f_4_8+floatloss_float_imagenet_finetune_lr_0.01_90ep/checkpoint.pth.tar  
+    #CHECKPOINT: /data/train_log_finetune/resnet18_simsiam_rerun_float_imagenet_finetune/checkpoint.pth.tar
+    NUM_CLASSES: 1000
+TRAIN:
+    EPOCHS: 90
+    USE_DDP: True
+    LINEAR_EVAL: False
+    WARMUP_FC: False
+    DATASET: imagenet
+    BATCH_SIZE: 64 # per-gpu
+    OPTIMIZER: 
+        NAME: sgd
+        MOMENTUM: 0.9
+        WEIGHT_DECAY: 0.0001 # 1e-5
+    LR_SCHEDULER:
+        WARMUP_EPOCHS: 0
+        WARMUP_LR: 0.0002 # 1e-4
+        BASE_LR: 0.01 # 1e-2
+        MIN_LR: 0.
+        TYPE: multiStep
+        DECAY_RATE: 0.1
+        DECAY_MILESTONES : [30, 60]
+    LOSS: 
+        CRITERION:
+            NAME: CrossEntropy
+        #REGULARIZER:
+        #    NAME: PACT
+        LAMBDA: 0.0001
+    METER:
+        NAME: ACC
+        ACC:
+            TOPK: [1, 5]
+    RUNNER:
+        NAME: default
+AUG:
+    TRAIN:
+        HORIZONTAL_FLIP:
+            PROB: 0.5
+        RANDOMRESIZEDCROP:
+            ENABLE: True
+            SCALE: (0.08, 1.0)
+            INTERPOLATION: bilinear
+        NORMLIZATION:
+            MEAN: [0.485, 0.456, 0.406]
+            STD: [0.229, 0.224, 0.225]
+    EVALUATION:
+        RESIZE: 
+            ENABLE: True
+            SIZE: [256, 256]
+        CENTERCROP: 
+            ENABLE: True
+        NORMLIZATION:
+            MEAN: [0.485, 0.456, 0.406]
+            STD: [0.229, 0.224, 0.225]
+QUANT:
+    TYPE: ptq
+    CALIBRATION:
+        TYPE: tar
+        PATH: calibrations/imagenet_100.tar
+        SIZE: 100
+        BATCHSIZE: 25
+    W:
+        BIT: 0
+        SYMMETRY: True
+        QUANTIZER: uniform
+        GRANULARITY : channelwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    A:
+        BIT: 0
+        SYMMETRY: False
+        QUANTIZER: uniform
+        GRANULARITY : layerwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    BIT_CONFIG: [{
+        "conv1": {"w": 8, "a": 8},
+        "layer1.0.conv2": {"a": 0},
+        "layer1.1.conv2": {"a": 0},
+        "layer2.0.conv2": {"a": 0},
+        "layer2.0.downsample": {"a": 0},
+        "layer2.1.conv2": {"a": 0},
+        "layer3.0.downsample": {"a": 0},
+        "layer3.0.conv2": {"a": 0},
+        "layer3.1.conv2": {"a": 0},
+        "layer4.0.downsample": {"a": 0},
+        "layer4.0.conv2": {"a": 0},
+        "layer4.1.conv2": {"a": 0},
+        "fc": {"w": 8, "a": 0},
+    }]

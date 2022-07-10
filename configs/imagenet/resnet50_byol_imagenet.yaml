@@ -1,0 +1,79 @@
+SEED: 100
+MODEL:
+    ARCH: resnet50
+    INPUTSHAPE: [224, 224]
+    CHECKPOINT: /data/train_log/imagenet/byol_imagenet_r50_imagenet_baseline/checkpoint.pth.tar
+TRAIN:
+    EPOCHS: 100
+    USE_DDP: True
+    DATASET: imagenet
+    BATCH_SIZE: 32 # per-gpu
+    OPTIMIZER: 
+        NAME: sgd
+        MOMENTUM: 0.9
+        WEIGHT_DECAY: 0.0001 # 1e-5
+    LR_SCHEDULER:
+        WARMUP_EPOCHS: 0
+        WARMUP_LR: 0.0002 # 1e-4
+        BASE_LR: 0.05 # 1e-2
+        MIN_LR: 0.
+        TYPE: cosine
+    LOSS: 
+        CRITERION:
+            NAME: CosineSimilarityv2
+        #REGULARIZER:
+        #    NAME: PACT
+        LAMBDA: 0.0001
+    METER:
+        NAME: average
+        ACC:
+            TOPK: [1, 5]
+    RUNNER:
+        NAME: ssl
+AUG:
+    TRAIN:
+        HORIZONTAL_FLIP:
+            PROB: 0.5
+        RANDOMRESIZEDCROP:
+            ENABLE: True
+            SCALE: (0.08, 1.0)
+            INTERPOLATION: bilinear
+        NORMLIZATION:
+            MEAN: [0.485, 0.456, 0.406]
+            STD: [0.229, 0.224, 0.225]
+    EVALUATION:
+        RESIZE: 
+            ENABLE: True
+            SIZE: [256, 256]
+        CENTERCROP: 
+            ENABLE: True
+        NORMLIZATION:
+            MEAN: [0.485, 0.456, 0.406]
+            STD: [0.229, 0.224, 0.225]
+QUANT:
+    TYPE: ptq
+    CALIBRATION:
+        TYPE: tar
+        PATH: calibrations/imagenet_100.tar
+        SIZE: 100
+        BATCHSIZE: 25
+    W:
+        BIT: 0
+        SYMMETRY: True
+        QUANTIZER: uniform
+        GRANULARITY : channelwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    A:
+        BIT: 0
+        SYMMETRY: False
+        QUANTIZER: uniform
+        GRANULARITY : layerwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+SSL:
+    TYPE: BYOL
+    SETTING:
+        DIM: 512
+        HIDDEN_DIM: 2048
+        MOMENTUM: 0.99

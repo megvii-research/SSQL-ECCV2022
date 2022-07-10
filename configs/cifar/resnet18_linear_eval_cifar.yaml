@@ -1,0 +1,97 @@
+SEED: 100
+MODEL:
+    ARCH: cifar_resnet18
+    INPUTSHAPE: [32, 32]
+    #ARCH: resnet18
+    #INPUTSHAPE: [224, 224] # imagenet transfer
+    PRETRAINED: /data/train_log_SSQL_release/cifar10/r18/SSQL_SimSiam_w_2_8_f_4_8_cifar_r18_cifar10/checkpoint.pth.tar
+    NUM_CLASSES: 10
+TRAIN:
+    EPOCHS: 100
+    USE_DDP: True
+    LINEAR_EVAL: True
+    DATASET: cifar10
+    BATCH_SIZE: 128 # per-gpu
+    OPTIMIZER: 
+        NAME: sgd
+        MOMENTUM: 0.9
+        WEIGHT_DECAY: 0.000 # 1e-5
+    LR_SCHEDULER:
+        WARMUP_EPOCHS: 0
+        WARMUP_LR: 0.0002 # 1e-4
+        BASE_LR: 30.0 # 1e-2
+        #BASE_LR: 0.1 
+        MIN_LR: 0.
+        #TYPE: cosine
+        TYPE: multiStep
+        DECAY_RATE: 0.1
+        DECAY_MILESTONES : [60, 80]
+    LOSS: 
+        CRITERION:
+            NAME: CrossEntropy
+        #REGULARIZER:
+        #    NAME: PACT
+        LAMBDA: 0.0001
+    METER:
+        NAME: ACC
+        ACC:
+            TOPK: [1, 5]
+    RUNNER:
+        NAME: default
+AUG:
+    TRAIN:
+        HORIZONTAL_FLIP:
+            PROB: 0.5
+        RANDOMRESIZEDCROP:
+            ENABLE: True
+            SCALE: (0.08, 1.0)
+            INTERPOLATION: bilinear
+        #RANDOMCROP:
+        #    ENABLE: True
+        #    PADDING: 4
+        NORMLIZATION:
+            MEAN: [0.4914, 0.4822, 0.4465]
+            STD: [0.2023, 0.1994, 0.2010]
+    EVALUATION:
+        RESIZE: 
+            ENABLE: True
+            SIZE: [224, 224]
+        #RESIZE: 
+        #    ENABLE: False
+        #    SIZE: [32, 32]
+        CENTERCROP: 
+            ENABLE: False
+        NORMLIZATION:
+            MEAN: [0.4914, 0.4822, 0.4465]
+            STD: [0.2023, 0.1994, 0.2010]
+QUANT:
+    TYPE: ptq
+    W:
+        BIT: 4
+        SYMMETRY: True
+        QUANTIZER: uniform
+        GRANULARITY : channelwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    A:
+        BIT: 4
+        SYMMETRY: False
+        QUANTIZER: uniform
+        GRANULARITY : layerwise
+        OBSERVER_METHOD:
+            NAME: MINMAX
+    BIT_CONFIG: [{
+        "conv1": {"w": 8, "a": 8},
+        "layer1.0.conv2": {"a": 0},
+        "layer1.1.conv2": {"a": 0},
+        "layer2.0.conv2": {"a": 0},
+        "layer2.0.downsample": {"a": 0},
+        "layer2.1.conv2": {"a": 0},
+        "layer3.0.downsample": {"a": 0},
+        "layer3.0.conv2": {"a": 0},
+        "layer3.1.conv2": {"a": 0},
+        "layer4.0.downsample": {"a": 0},
+        "layer4.0.conv2": {"a": 0},
+        "layer4.1.conv2": {"a": 0},
+        "fc": {"a": 0},
+    }]
