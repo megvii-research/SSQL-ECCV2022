@@ -5,11 +5,11 @@ MODEL:
     #CHECKPOINT: train_log/imagenet/RQbyol_randombit_w_2_8_f_4_8_add_float_r50_imagenet_baseline/checkpoint.pth.tar
     #CHECKPOINT: train_log/imagenet/RQbyol_randombit_4_16+floatloss_add_float_r50_imagenet_baseline/checkpoint.pth.tar
 TRAIN:
-    EPOCHS: 200
+    EPOCHS: 100
     USE_DDP: True
     SYNC_BN: True
     DATASET: imagenet
-    BATCH_SIZE: 64 # per-gpu, set to 64 for 4 gpu, set to 32 for 8 gpu, set to 42 for 6 gpu
+    BATCH_SIZE: 32 # per-gpu, set to 64 for 4 gpu, set to 32 for 8 gpu, set to 42 for 6 gpu
     PRINT_FREQ: 50
     OPTIMIZER: 
         NAME: sgd
