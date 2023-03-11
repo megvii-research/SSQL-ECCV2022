@@ -111,7 +111,7 @@ python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py \
     --output [your_checkpoint_dir] -j 8
 ```
 
-- Linear evaluation on ImageNet (c.f. [scripts/imagenet/run_linear_eval_imagenet.sh](scripts/imagenet/run_linear_eval_imagenet.sh)). If you want to specify the model weights and quantization bits, see the instructions on CIFAR above and modify the corresponding [configs/ssl_qat/resnet18_linear_eval_imagenet.yaml](configs/ssl_qat/resnet18_linear_eval_imagenet.yaml).
+- Linear evaluation on ImageNet (c.f. [scripts/imagenet/run_linear_eval_imagenet.sh](scripts/imagenet/run_linear_eval_imagenet.sh)). If you want to specify the model weights and quantization bits, see the instructions on CIFAR above and modify the corresponding [configs/imagenet/resnet18_linear_eval_imagenet.yaml](configs/imagenet/resnet18_linear_eval_imagenet.yaml).
 
 #### Transferring Experiments
 [To be updated]
