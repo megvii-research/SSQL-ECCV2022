@@ -26,7 +26,7 @@ class SimSiam(nn.Module):
         prev_dim = self.encoder_q.fc.weight.shape[1]
 
         # to make resnet-18 and resnet-34 have larger hidden dimensions, e.g., 2048
-        fc_dim = hidden_dim
+        fc_dim = prev_dim
         self.encoder_q.fc = nn.Sequential(nn.Linear(prev_dim, fc_dim, bias=False),
                                         nn.BatchNorm1d(fc_dim),
                                         nn.ReLU(inplace=True), # first layer
