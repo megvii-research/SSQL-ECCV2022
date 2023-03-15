@@ -26,7 +26,7 @@ class SSQL_SimSiam(nn.Module):
 
         # build a 3-layer projector
         prev_dim = self.encoder_q.fc.weight.shape[1]
-        fc_dim = prev_dim
+        fc_dim = max(prev_dim, dim)
         self.encoder_q.fc = nn.Sequential(nn.Linear(prev_dim, fc_dim, bias=False),
                                         nn.BatchNorm1d(fc_dim),
                                         nn.ReLU(inplace=True), # first layer
